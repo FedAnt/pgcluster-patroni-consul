@@ -1,0 +1,54 @@
+---
+
+- name: Add the user 'consul'
+  ansible.builtin.user:
+    name: consul
+    comment: "Consul DCS service"
+
+- name: Create a directory if it does not exist
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0775'
+    owner: consul
+    group: consul
+  with_items:
+    - /var/lib/consul 
+    - /etc/consul.d
+
+- name: Copy configuration file consul
+  ansible.builtin.template:
+    src: "../../templates/consul/config.j2"
+    dest: "/etc/consul.d/config.json"
+    mode: '0775'
+  
+- name: Consul validate configuration
+  command: consul validate /etc/consul.d/config.json
+  register: consul_out
+
+- name: Print - consul validate
+  ansible.builtin.debug:
+    var: consul_out.stdout
+
+- name: Copy configuration service consul
+  ansible.builtin.template:
+    src: "../../templates/consul/service.j2"
+    dest: "/etc/systemd/system/consul.service"
+    mode: '0775'
+
+- name: Start and Enable service consul
+  systemd:
+    name: consul
+    state: started
+    enabled: yes
+    daemon_reload: yes
+
+- name: Show consul members
+  command: consul members -detailed
+  register: consul_out
+
+- name: Print - consul members
+  ansible.builtin.debug:
+    var: consul_out.stdout
+
+    

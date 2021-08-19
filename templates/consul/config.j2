@@ -1,0 +1,34 @@
+{
+     "bind_addr": "0.0.0.0",
+     "bootstrap_expect": {{ consul_bootstrap_expect }},
+     "client_addr": "0.0.0.0",
+     "datacenter": "dc1",
+     "data_dir": "/var/lib/consul",
+     "domain": "consul",
+     "enable_script_checks": true,
+     "dns_config": {
+         "enable_truncate": true,
+         "only_passing": true
+     },
+     "enable_syslog": true,
+     "encrypt": "{{ hostvars.consul1.consul_cluster_token }}",
+     "leave_on_terminate": true,
+     "log_level": "INFO",
+     "rejoin_after_leave": true,
+     "retry_join": [
+         "{{ hostvars.db1.ansible_host }}",
+         "{{ hostvars.db2.ansible_host }}",
+         "{{ hostvars.consul1.ansible_host }}",
+         "{{ hostvars.consul2.ansible_host }}",
+         "{{ hostvars.consul3.ansible_host }}"
+     ],
+     "server": {{ consul_server }},
+     "start_join": [
+         "{{ hostvars.db1.ansible_host }}",
+         "{{ hostvars.db2.ansible_host }}",
+         "{{ hostvars.consul1.ansible_host }}",
+         "{{ hostvars.consul2.ansible_host }}",
+         "{{ hostvars.consul3.ansible_host }}"
+     ],
+    "ui_config": { "enabled": true }
+}

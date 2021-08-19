@@ -1,0 +1,5 @@
+---
+
+consul_cluster_token: zpjf5a4reDbJFpT6FeaF0LGxD0zBRPSRbIoUkLBt0ps=
+consul_server: "true"
+consul_bootstrap_expect: 3
